@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid bg-light py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">التدريب والتطوير المهني
+</h1>
+        <p class="lead mb-4">
+عزز مهاراتك البحثية من خلال برامجنا التدريبية الشاملة
+        </p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- Featured Programs -->
+    {% if featured_programs %}
+    <div class="mb-5">
+        <h2 class="mb-4 border-bottom pb-2">Featured Programs</h2>
+        <div class="row">
+            {% for program in featured_programs %}
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100 shadow-lg border-primary">
+                    <div class="row g-0">
+                        {% if program.cover_image %}
+                        <div class="col-md-4">
+                            <img src="{{ program.cover_image.url }}" class="img-fluid rounded-start h-100" 
+                                 alt="{{ program.title }}" style="object-fit: cover;">
+                        </div>
+                        {% endif %}
+                        <div class="col-md-{% if program.cover_image %}8{% else %}12{% endif %}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ program.title }}</h5>
+                                <p class="card-text">{{ program.short_description|truncatechars:150 }}</p>
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="badge bg-primary">{{ program.get_program_type_display }}</span>
+                                    <span class="badge bg-info">{{ program.get_level_display }}</span>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <p class="mb-1">
+                                        <i class="far fa-calendar-alt me-2"></i>
+                                        {{ program.start_date|date:"M d, Y" }} - {{ program.end_date|date:"M d, Y" }}
+                                    </p>
+                                    <p class="mb-0">
+                                        <i class="fas fa-chalkboard-teacher me-2"></i>
+                                        {{ program.get_mode_display }}
+                                    </p>
+                                </div>
+                                
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'training_detail' program.slug %}" class="btn btn-primary">Learn More</a>
+                                    {% if program.registration_link %}
+                                    <a href="{{ program.registration_link }}" target="_blank" class="btn btn-success">Register Now</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="row mb-5 position-relative">
+    <div class="col-lg-6 mb-5 mb-lg-0">
+        <h2 class="mb-4 text-center fw-bold">ورش عمل</h2>
+        <div class="row g-4">
+            {% if workshops %}
+                {% for workshop in workshops|slice:":4" %}
+                <div class="col-sm-6">
+                    <div class="card h-100 text-center border-0 bg-transparent">
+                        {% if workshop.cover_image %}
+                            <div class="d-flex justify-content-center mb-3">
+                                <img src="{{ workshop.cover_image.url }}" 
+                                     class="rounded shadow-sm img-fluid" 
+                                     alt="{{ workshop.title }}" 
+                                     style="width: 100%; max-width: 400px; height: 250px; object-fit: cover;">
+                            </div>
+                        {% else %}
+                            <div class="d-flex justify-content-center mb-3">
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center shadow-sm" style="width: 100%; max-width: 400px; height: 250px;">
+                                    <i class="fas fa-tools fa-4x text-muted opacity-25"></i>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="card-body p-0">
+                            <h5 class="card-title fw-bold">{{ workshop.title }}</h5>
+                            <p class="text-muted small mb-3">{{ workshop.start_date|date:"M Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+<div class="d-none d-lg-block"
+     style="position: absolute;
+            left: 50%;
+            top: -5%;
+            bottom: 5%;
+            width: 0.5px;
+            background-color: #ddd;
+            transform: translateX(-50%);">
+</div>
+
+    <div class="col-lg-6">
+        <h2 class="mb-4 text-center fw-bold" >بعض برامج الشهادات </h2>
+        <div class="row g-4">
+            {% if certificate_programs %}
+                {% for cert in certificate_programs|slice:":4" %}
+                <div class="col-sm-6">
+                    <div class="card h-100 text-center border-0 bg-transparent">
+                        {% if cert.cover_image %}
+                            <div class="d-flex justify-content-center mb-3">
+                                <img src="{{ cert.cover_image.url }}" 
+                                     class="rounded shadow-sm img-fluid" 
+                                     alt="{{ cert.title }}" 
+                                     style="width: 100%; max-width: 400px; height: 250px; object-fit: cover;">
+                            </div>
+                        {% else %}
+                            <div class="d-flex justify-content-center mb-3">
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center shadow-sm" style="width: 100%; max-width: 400px; height: 250px;">
+                                    <i class="fas fa-certificate fa-4x text-muted opacity-25"></i>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="card-body p-0">
+                            <h5 class="card-title fw-bold">{{ cert.title }}</h5>
+                            <p class="text-muted small mb-3">{{ cert.start_date|date:"M Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Training Stats -->
+    <div class="bg-primary text-white rounded p-4 mb-5">
+        <div class="row text-center">
+            <div class="col-md-3 mb-3">
+                <h3 class="fw-bold">{{ upcoming_programs.count }}</h3>
+                <p>البرامج القادمة</p>
+            </div>
+            <div class="col-md-3 mb-3">
+                <h3 class="fw-bold">{{ ongoing_programs.count }}</h3>
+                <p>البرامج المتاحة حاليا</p>
+            </div>
+            <div class="col-md-3 mb-3">
+                <h3 class="fw-bold">{{ past_programs.count }}</h3>
+                <p> ورش عمل اكتملت</p>
+            </div>
+            <div class="col-md-3 mb-3">
+                <h3 class="fw-bold">500+</h3>
+                <p>باحثين تم تدريبهم</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

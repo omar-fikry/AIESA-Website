@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Journal Header -->
+    <div class="row mb-5">
+        <div class="col-md-4">
+            {% if journal.cover_image %}
+            <img src="{{ journal.cover_image.url }}" alt="{{ journal.title }}" class="img-fluid rounded shadow">
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <h1 class="display-5 fw-bold mb-3">{{ journal.title }}</h1>
+            
+            {% if journal.issn %}
+            <p class="text-muted">ISSN: {{ journal.issn }}</p>
+            {% endif %}
+            
+            <div class="mb-4">
+                <span class="badge bg-primary me-2">{{ journal.frequency }}</span>
+                <span class="badge bg-success me-2">{{ journal.get_status_display }}</span>
+                {% if journal.is_featured %}
+                <span class="badge bg-warning">Featured</span>
+                {% endif %}
+            </div>
+            
+            <p class="lead">{{ journal.description }}</p>
+            
+            <div class="d-flex gap-3 mt-4">
+                {% if journal.submission_link %}
+                <a href="{{ journal.submission_link }}" target="_blank" class="btn btn-primary">
+                    <i class="fas fa-paper-plane me-2"></i>Submit Manuscript
+                </a>
+                {% endif %}
+                
+                {% if journal.website_link %}
+                <a href="{{ journal.website_link }}" target="_blank" class="btn btn-outline-primary">
+                    <i class="fas fa-external-link-alt me-2"></i>Visit Website
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Journal Details -->
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Editor Info -->
+            {% if journal.editor_in_chief %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Editor-in-Chief</h5>
+                    <p class="card-text">{{ journal.editor_in_chief }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Volumes -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Latest Volumes</h5>
+                </div>
+                <div class="card-body">
+                    {% if volumes %}
+                    <div class="list-group">
+                        {% for volume in volumes|slice:":5" %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">Volume {{ volume.volume_number }}, {{ volume.year }}</h6>
+                                    {% if volume.issue_number %}
+                                    <small class="text-muted">Issue: {{ volume.issue_number }}</small>
+                                    {% endif %}
+                                </div>
+                                {% if volume.pdf_file %}
+                                <a href="{{ volume.pdf_file.url }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-download me-1"></i>Download PDF
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">No volumes published yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Publisher Info -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0">Publication Details</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        {% if journal.publisher %}
+                        <li class="mb-2">
+                            <strong>Publisher:</strong><br>
+                            {{ journal.publisher }}
+                        </li>
+                        {% endif %}
+                        
+                        {% if journal.impact_factor %}
+                        <li class="mb-2">
+                            <strong>Impact Factor:</strong><br>
+                            {{ journal.impact_factor }}
+                        </li>
+                        {% endif %}
+                        
+                        <li class="mb-2">
+                            <strong>Frequency:</strong><br>
+                            {{ journal.frequency }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Indexing -->
+            {% if journal.indexing %}
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Indexed In</h6>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ journal.indexing|linebreaks }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

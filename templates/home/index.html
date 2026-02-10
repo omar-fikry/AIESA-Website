@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row align-items-center py-5">
+    <div class="col-lg-6">
+        <h1 class="display-4 fw-bold mb-4">أهلا بكم في المؤسسة العربية</h1>
+        <p class="lead mb-4">
+تطوير المعرفة العلمية من خلال التميز في النشر
+        </p>
+        <p class="mb-4">
+            تكرس المؤسسة جهودها لنشر البحوث العلمية ذات التأثير الكبير في مختلف التخصصات، وتعزيز الابتكار والتعاون في المجتمع العلمي.
+        </p>
+        <a href="#services" class="btn btn-primary btn-lg">خدماتنا</a>
+    </div>
+    <div class="col-lg-6">
+        <img src="/static/images/WhatsApp Image 2026-01-20 at 6.47.04 PM (1).jpeg" 
+             alt="Scientific Research" class="img-fluid rounded shadow">
+    </div>
+</div>
+
+<div class="row py-5" id="services">
+    <div class="col-12 text-center mb-5">
+        <h2 class="fw-bold">خدماتنا</h2>
+        <p class="text-muted">ماذا نقدم للمجتمع العلمي</p>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <i class="fas fa-book fa-3x text-primary mb-3"></i>
+                <h4>مجلات علمية</h4>
+                <p class="text-muted">منشورات محكمة من قبل النظراء في مختلف التخصصات
+</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                <h4>المؤتمرات</h4>
+                <p class="text-muted">المؤتمرات والندوات العلمية الدولية
+</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
+                <h4>التدريبات</h4>
+                <p class="text-muted">برامج التطوير المهني والتدريب البحثي
+</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr class="my-5">
+
+<div class="row py-5" id="news">
+    <div class="col-12 text-center mb-5">
+        <h2 class="fw-bold">آخر الأخبار</h2>
+        <p class="text-muted">ابق على اطلاع بأحدث مستجدات المؤسسة</p>
+    </div>
+
+    {% if latest_news %}
+        {% for news in latest_news %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                {% if news.image %}
+                    <img src="{{ news.image.url }}" class="card-img-top" alt="{{ news.title }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-newspaper fa-3x text-secondary"></i>
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    <small class="text-primary">{{ news.created_at|date:"d M Y" }}</small>
+                    <h5 class="card-title mt-2 fw-bold">{{ news.title }}</h5>
+                    <p class="card-text text-muted">{{ news.summary|truncatewords:100 }}</p>
+                </div>
+                <!-- <div class="card-footer bg-transparent border-0 pb-3"> -->
+                    <!-- <a href="#" class="btn btn-outline-primary btn-sm">اقرأ المزيد</a> -->
+                <!-- </div> -->
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12 text-center">
+            <p class="text-muted">لا توجد أخبار حالياً.</p>
+        </div>
+    {% endif %}
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

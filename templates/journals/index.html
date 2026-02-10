@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid bg-light py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">المجلات العلمية</h1>
+        <p class="lead mb-5">
+مجلات علمية محكمة ذات تأثير عالٍ تغطي تخصصات علمية متنوعة
+        </p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- Featured Journals -->
+    {% if featured_journals %}
+    <div class="mb-5">
+        <h2 class="mb-4 border-bottom pb-2">مجلاتنا المميزة</h2>
+        <div class="row">
+            {% for journal in featured_journals %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if journal.cover_image %}
+                    <img src="{{ journal.cover_image.url }}" class="card-img-top" alt="{{ journal.title }}" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ journal.title }}</h5>
+                        {% if journal.issn %}
+                        <p class="text-muted small mb-2">ISSN: {{ journal.issn }}</p>
+                        {% endif %}
+                        <p class="card-text">{{ journal.short_description|truncatechars:150 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-primary">{{ journal.frequency }}</span>
+                            <a href="{% url 'journal_detail' journal.slug %}" class="btn btn-outline-primary btn-sm">اعرض المجلة</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- All Active Journals -->
+    <div class="mb-5">
+        <h2 class="mb-4 border-bottom pb-2">كل المجلات</h2>
+        {% if active_journals %}
+        <div class="row">
+            {% for journal in active_journals %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ journal.title }}</h5>
+                        <p class="card-text text-muted small">{{ journal.short_description|truncatechars:100 }}</p>
+                        <div class="mt-3">
+                            <a href="{% url 'journal_detail' journal.slug %}" class="btn btn-outline-primary btn-sm"> اعرض التفاصيل</a>
+                            {% if journal.submission_link %}
+                            <a href="{{ journal.submission_link }}" target="_blank" class="btn btn-primary btn-sm ms-2">سلم ورقة علمية</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No journals available at the moment. Check back soon!
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Journal Stats -->
+    <div class="row bg-primary text-white rounded p-4 mb-5">
+        <div class="col-md-3 text-center">
+            <h3 class="fw-bold">{{ active_journals.count }}</h3>
+            <p>المجلات النشطة</p>
+        </div>
+        <div class="col-md-3 text-center">
+            <h3 class="fw-bold">100%</h3>
+            <p>محكمة</p>
+        </div>
+        <div class="col-md-3 text-center">
+            <h3 class="fw-bold">الوصول للمجلات</h3>
+            <p>متاح</p>
+        </div>
+        <div class="col-md-3 text-center">
+            <h3 class="fw-bold">24/7</h3>
+            <p>التقديم عبر الإنترنت</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid bg-dark text-white py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">الأنشطة العلمية</h1>
+        <p class="lead mb-0">
+تطوير المعرفة من خلال البحث والتعاون والتوعية
+        </p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- Featured Activities -->
+    {% if featured_activities %}
+    <div class="mb-5">
+        <h2 class="mb-4 border-bottom pb-2">Featured Activities</h2>
+        <div class="row">
+            {% for activity in featured_activities %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow">
+                    {% if activity.cover_image %}
+                    <img src="{{ activity.cover_image.url }}" class="card-img-top" alt="{{ activity.title }}"
+                         style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ activity.title }}</h5>
+                        <p class="card-text">{{ activity.short_description|truncatechars:120 }}</p>
+                        
+                        <div class="mb-3">
+                            <span class="badge bg-primary">{{ activity.get_activity_type_display }}</span>
+                            <span class="badge bg-{% if activity.status == 'ongoing' %}success{% elif activity.status == 'completed' %}secondary{% else %}warning{% endif %}">
+                                {{ activity.get_status_display }}
+                            </span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                {{ activity.start_date|date:"M Y" }}
+                                {% if activity.end_date %}
+                                 - {{ activity.end_date|date:"M Y" }}
+                                {% endif %}
+                            </small>
+                            <a href="{% url 'activity_detail' activity.slug %}" class="btn btn-sm btn-outline-primary">
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Ongoing Activities -->
+    <!-- <div class="mb-5">
+        <h2 class="mb-4 border-bottom pb-2">Ongoing Activities</h2>
+        {% if ongoing_activities %}
+        <div class="row">
+            {% for activity in ongoing_activities %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="card-title mb-0">{{ activity.title }}</h5>
+                            <span class="badge bg-success">Ongoing</span>
+                        </div>
+                        
+                        <p class="card-text">{{ activity.short_description }}</p>
+                        
+                        <div class="mb-3">
+                            <p class="mb-1">
+                                <i class="fas fa-user-tie me-2"></i>
+                                <strong>Lead:</strong> {{ activity.principal_investigator|default:"Not specified" }}
+                            </p>
+                            {% if activity.location %}
+                            <p class="mb-1">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                <strong>Location:</strong> {{ activity.location }}
+                            </p>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="progress mb-3" style="height: 8px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 style="width: 75%"></div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">
+                                Started: {{ activity.start_date|date:"M d, Y" }}
+                            </small>
+                            <a href="{% url 'activity_detail' activity.slug %}" class="btn btn-primary btn-sm">
+                                View Progress
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No ongoing activities at the moment.
+        </div>
+        {% endif %}
+    </div> -->
+
+
+
+
+    <!-- Activity Types -->
+    <!-- <div class="row mb-5">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">مشاريع بحثية</h5>
+                </div>
+                <div class="card-body">
+                    {% if research_projects %}
+                    <div class="list-group list-group-flush">
+                        {% for project in research_projects|slice:":5" %}
+                        <div href="{% url 'activity_detail' project.slug %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ project.title }}</h6>
+                                <small>{{ project.start_date|date:"Y" }}</small>
+                            </div>
+                            <p class="mb-1 small">{{ project.short_description|truncatechars:80 }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">No research projects listed.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">أنشطة توعوية</h5>
+                </div>
+                <div class="card-body">
+                    {% if outreach_activities %}
+                    <div class="list-group list-group-flush">
+                        {% for outreach in outreach_activities|slice:":5" %}
+                        <div href="{% url 'activity_detail' outreach.slug %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ outreach.title }}</h6>
+                                <small>{{ outreach.start_date|date:"Y" }}</small>
+                            </div>
+                            <p class="mb-1 small">{{ outreach.short_description|truncatechars:80 }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">No outreach activities listed.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+
+
+
+
+
+
+
+
+<div class="row mb-5">
+    <div class="col-md-6">
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0 py-1 text-center">مشاريع بحثية</h5>
+            </div>
+            <div class="card-body">
+                {% if research_projects %}
+                <div class="list-group list-group-flush">
+                    {% for project in research_projects|slice:":5" %}
+                    <div class="list-group-item px-0 py-4 text-center border-bottom">
+                        <div class="mb-3">
+                            {% if project.cover_image %}
+                                <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" 
+                                     class="rounded shadow-sm mx-auto d-block"
+                                     style="width: 100%; max-width: 250px; height: 160px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center mx-auto" 
+                                     style="width: 100%; max-width: 250px; height: 160px;">
+                                    <i class="fas fa-microscope fa-2x text-muted"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="px-3">
+                            <h6 class="mb-1 fw-bold text-dark">{{ project.title }}</h6>
+                            <div class="mb-2">
+                                <small class="badge bg-light text-primary border">{{ project.start_date|date:"Y" }}</small>
+                            </div>
+                            <p class="mb-0 small text-muted mx-auto" style="max-width: 400px;">
+                                {{ project.short_description|truncatechars:120 }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted text-center mb-0">No research projects listed.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0 py-1 text-center">أنشطة توعوية</h5>
+            </div>
+            <div class="card-body">
+                {% if outreach_activities %}
+                <div class="list-group list-group-flush">
+                    {% for outreach in outreach_activities|slice:":5" %}
+                    <div class="list-group-item px-0 py-4 text-center border-bottom">
+                        <div class="mb-3">
+                            {% if outreach.cover_image %}
+                                <img src="{{ outreach.cover_image.url }}" alt="{{ outreach.title }}" 
+                                     class="rounded shadow-sm mx-auto d-block"
+                                     style="width: 100%; max-width: 250px; height: 160px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center mx-auto" 
+                                     style="width: 100%; max-width: 250px; height: 160px;">
+                                    <i class="fas fa-bullhorn fa-2x text-muted"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="px-3">
+                            <h6 class="mb-1 fw-bold text-dark">{{ outreach.title }}</h6>
+                            <div class="mb-2">
+                                <small class="badge bg-light text-primary border">{{ outreach.start_date|date:"Y" }}</small>
+                            </div>
+                            <p class="mb-0 small text-muted mx-auto" style="max-width: 400px;">
+                                {{ outreach.short_description|truncatechars:120 }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted text-center mb-0">No outreach activities listed.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    <!-- Completed Activities -->
+    {% if completed_activities %}
+    <div class="mb-5">
+        <h3 class="mb-4 border-bottom pb-2">Recently Completed</h3>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Type</th>
+                        <th>Period</th>
+                        <th>Outcomes</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for activity in completed_activities|slice:":8" %}
+                    <tr>
+                        <td>{{ activity.title }}</td>
+                        <td>{{ activity.get_activity_type_display }}</td>
+                        <td>
+                            {{ activity.start_date|date:"M Y" }}
+                            {% if activity.end_date %}
+                             - {{ activity.end_date|date:"M Y" }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if activity.achieved_outcomes %}
+                            <span class="badge bg-success">Results Available</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'activity_detail' activity.slug %}" class="btn btn-sm btn-outline-primary">
+                                View Report
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Call to Action -->
+    <div class="bg-light p-5 rounded text-center">
+        <h3 class="mb-3">لديك فكرة مشروع؟</h3>
+        <p class="mb-4">تعاون مع المؤسسة العربية في البحث العلمي و الأنشطة</p>
+        <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">اقتراح التعاون</a>
+    </div>
+</div>
+{% endblock %}

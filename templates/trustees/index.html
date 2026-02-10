@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid bg-primary text-white py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">مجلس الأمناء</h1>
+        <p class="lead mb-0">
+            قادة متميزون يوجهون رؤية ورسالة المؤسسة
+        </p>
+    </div>
+</div>
+
+<div class="container py-5">
+    {% if current_board %}
+    <div class="card mb-5 border-primary">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">{{ current_board.name }}</h3>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ current_board.description|default:"Current board term members." }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Current Trustees -->
+    <div class="mb-5">
+        <h2 class="mb-4 border-bottom pb-2">الأعضاء الحاليين</h2>
+        {% if current_trustees %}
+        <div class="row">
+            {% for trustee in current_trustees %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if trustee.photo %}
+                    <img src="{{ trustee.photo.url }}" class="card-img-top" alt="{{ trustee.name }}" 
+                         style="height: 250px; object-fit: cover;">
+                    {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center" 
+                         style="height: 250px;">
+                        <i class="fas fa-user-tie fa-5x text-secondary"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h5 class="card-title mb-1">{{ trustee.name }}</h5>
+                        <p class="text-primary fw-bold mb-2">{{ trustee.display_position }}</p>
+                        
+                        {% if trustee.current_role %}
+                        <p class="text-muted small mb-3">{{ trustee.current_role }}</p>
+                        {% endif %}
+                        
+                        <p class="card-text small">{{ trustee.short_bio|truncatechars:120 }}</p>
+                        
+
+
+
+
+
+                        
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            Board member information will be available soon.
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Past Trustees -->
+    {% if past_trustees %}
+    <div class="mb-5">
+        <h3 class="mb-4 border-bottom pb-2">Former Board Members</h3>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Term</th>
+                        <th>Current Affiliation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trustee in past_trustees|slice:":15" %}
+                    <tr>
+                        <td>{{ trustee.name }}</td>
+                        <td>{{ trustee.display_position }}</td>
+                        <td>
+                            {{ trustee.term_start|date:"Y" }}
+                            {% if trustee.term_end %}
+                             - {{ trustee.term_end|date:"Y" }}
+                            {% endif %}
+                        </td>
+                        <td>{{ trustee.organization|default:"" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Board Terms History -->
+    {% if board_terms %}
+    <div class="mb-5">
+        <h3 class="mb-4 border-bottom pb-2">Board Terms History</h3>
+        <div class="row">
+            {% for term in board_terms %}
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 {% if term.is_current %}border-success{% endif %}">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ term.name }}
+                            {% if term.is_current %}
+                            <span class="badge bg-success ms-2">Current</span>
+                            {% endif %}
+                        </h5>
+                        <p class="card-text">
+                            {{ term.start_year }} - {{ term.end_year }}
+                        </p>
+                        <p class="card-text small text-muted">
+                            {{ term.description|truncatechars:100 }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

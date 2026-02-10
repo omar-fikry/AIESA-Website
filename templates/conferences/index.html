@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid bg-primary text-white py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">المؤتمرات العلمية</h1>
+        <p class="lead mb-0">
+            انضم إلى التجمعات العلمية الرائدة وعزز شبكة أبحاثك
+        </p>
+    </div>
+</div>
+
+<div class="container my-5">
+
+    {% if upcoming_conferences %}
+    <div class="mb-5">
+        <h3 class="mb-4 border-bottom pb-2">المؤتمرات القادمة</h3>
+        <div class="row">
+            {% for conference in upcoming_conferences %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if conference.banner_image %}
+                        <img src="{{ conference.banner_image.url }}" class="card-img-top" alt="{{ conference.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <span class="text-muted"><i class="fas fa-image fa-2x"></i></span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">{{ conference.get_conference_type_display }}</span>
+                        <h5 class="card-title">{{ conference.title }}</h5>
+                        <p class="text-muted small">
+                            <i class="far fa-calendar-alt me-1"></i> {{ conference.start_date|date:"d M Y" }}
+                            <br>
+                            <i class="fas fa-map-marker-alt me-1"></i> {{ conference.city }}, {{ conference.country }}
+                        </p>
+                        <p class="card-text">{{ conference.short_description|truncatechars:100 }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <a href="{% url 'conference_detail' conference.slug %}" class="btn btn-primary w-100">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if ongoing_conferences %}
+    <div class="mb-5">
+        <h3 class="mb-4 border-bottom pb-2">Currently Ongoing</h3>
+        <div class="row">
+            {% for conference in ongoing_conferences %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-warning">
+                    {% if conference.banner_image %}
+                        <img src="{{ conference.banner_image.url }}" class="card-img-top" alt="{{ conference.title }}" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ conference.title }}</h5>
+                        <p class="text-muted small">Happening Now!</p>
+                        <p class="card-text">{{ conference.short_description|truncatechars:150 }}</p>
+                        <a href="{% url 'conference_detail' conference.slug %}" class="btn btn-warning">Join Conference</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+{% if past_conferences %}
+    <div class="mb-5">
+        <h3 class="mb-4 border-bottom pb-2">المؤتمرات السابقة</h3>
+        
+        <div class="row">
+            {% for conference in past_conferences|slice:":10" %}
+            <div class="col-md-4 mb-4"> <div class="card h-100 shadow-sm text-center"> <div style="height: 250px; overflow: hidden; background-color: #f8f9fa;">
+                        {% if conference.banner_image %}
+                            <img src="{{ conference.banner_image.url }}" 
+                                 class="card-img-top" 
+                                 alt="{{ conference.title }}" 
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                                <i class="fas fa-image fa-3x"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-body">
+                        <span class="badge bg-secondary mb-2">{{ conference.conference_type|title }}</span>
+                        
+                        <h5 class="card-title fw-bold">{{ conference.title }}</h5>
+                        
+                        <p class="text-muted mb-2">
+                            <small>
+                                <i class="far fa-calendar-alt me-1"></i> {{ conference.start_date|date:"M Y" }}
+                            </small>
+                        </p>
+                        <p class="text-muted small mb-0">
+                            <i class="fas fa-map-marker-alt me-1"></i> {{ conference.venue }}
+                        </p>
+                    </div>
+
+                    <!-- <div class="card-footer bg-white border-top-0 pb-3">
+                         <div href="{% url 'conference_detail' conference.slug %}" class="btn btn-outline-primary btn-sm">View Details</div>
+                    </div> -->
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if past_conferences.count > 10 %}
+        <div class="text-center mt-4">
+            <a href="#" class="btn btn-outline-primary">View All Past Conferences</a>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="bg-light p-5 rounded text-center mb-5">
+        <h3 class="mb-3">مهتم بتنظيم مؤتمر مع المؤسسة العربية؟</h3>
+        <p class="mb-4">تعاون مع المؤسسة العربية لاستضافة مؤتمرك أو ندوتك العلمية</p>
+        <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">تواصل معنا</a>
+    </div>
+</div>
+{% endblock %}
